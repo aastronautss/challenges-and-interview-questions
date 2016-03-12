@@ -1,5 +1,3 @@
-require 'pry'
-
 class CircularBuffer
   class BufferEmptyException < StandardError; end
   class BufferFullException < StandardError; end

@@ -1,5 +1,3 @@
-require 'pry'
-
 class Octal
   def initialize(oct_number)
     @digits = oct_number.split('')
