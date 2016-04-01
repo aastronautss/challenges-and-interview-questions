@@ -3,23 +3,27 @@ class Prime
     raise ArgumentError if n < 1
 
     result = 1
-    while n > 0 do
+    while n > 0
       result += 1
       n -= 1 if is_prime? result
     end
 
-    return result
+    result
   end
 
   private
 
-  def is_prime?(n)
-    return true if n == 2
-    return false if n % 2 == 0
+  def is_prime?(num)
+    return true if [2, 3].include? num
+    return false if num % 2 == 0 || num % 3 == 0
 
-    (3..Math.sqrt(n)).each do |divisor|
-      return false if n % divisor == 0
+    i = 5
+    while i* i <= num
+      return false if num % i == 0 || num % (i + 2) == 0
+
+      i += 6
     end
+
     true
   end
 end
