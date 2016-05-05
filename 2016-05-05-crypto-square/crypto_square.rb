@@ -8,8 +8,7 @@ class Crypto
   end
 
   def size
-    square = find_next_square normalize_plaintext.length
-    Math.sqrt(square).floor
+    Math.sqrt(normalize_plaintext.length).ceil
   end
 
   def plaintext_segments
@@ -27,14 +26,5 @@ class Crypto
       row
     end
     segments.transpose.map { |row| row.join('') }.join(' ')
-  end
-
-  private
-
-  def find_next_square(num)
-    while num != Math.sqrt(num).floor**2
-      num += 1
-    end
-    num
   end
 end
