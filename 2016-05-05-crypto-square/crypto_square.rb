@@ -25,6 +25,6 @@ class Crypto
       (0...size).each { |idx| row[idx] ||= nil }
       row
     end
-    segments.transpose.map { |row| row.join('') }.join(' ')
+    segments.transpose.map(&:join).join(' ')
   end
 end
