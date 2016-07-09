@@ -1,23 +1,18 @@
 class Bst
-  attr_reader :data, :left, :right
+  attr_reader :data
+  attr_accessor :left, :right
 
   def initialize(data)
     @data = data
   end
 
   def insert(new_data)
-    if new_data <= @data
-      if @left.nil?
-        @left = Bst.new new_data
-      else
-        @left.insert new_data
-      end
+    branch = new_data <= @data ? :left : :right
+
+    if self.send(branch).nil?
+      self.send("#{branch}=", Bst.new(new_data))
     else
-      if @right.nil?
-        @right = Bst.new new_data
-      else
-        @right.insert new_data
-      end
+      self.send(branch).insert new_data
     end
   end
 
