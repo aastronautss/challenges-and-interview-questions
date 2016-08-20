@@ -2,53 +2,67 @@ require 'pry'
 
 class RailFenceCipher
   def self.encode(plaintext, num_rails)
-    return plaintext if num_rails <= 1
-
-    rails = Array.new(num_rails) { Array.new }
-
-    plaintext.each_char.each_with_index do |char, index|
-      rail = rail_position num_rails, index
-      rails[rail] << char
-    end
-
-    rails.join
+    chars = plaintext.chars
+    fill_rails(chars, num_rails).join
   end
 
   def self.decode(ciphertext, num_rails)
+    slots = fill_rails(0...ciphertext.length, num_rails)
+    result = Array.new(ciphertext.length)
 
+    mapping = slots.map do |rail|
+      chars = ciphertext.slice!((0...rail.length)).split ''
+      Hash[rail.zip(chars)]
+    end.inject(:merge)
+
+    result.each_index.map { |index| mapping[index] }.join
   end
 
-  def self.rail_position(num_rails, index)
-    cycle_length = 2 * num_rails - 2
-    pos_in_cycle = index % cycle_length
+  private
 
-    if pos_in_cycle <= num_rails - 1
-      pos_in_cycle
-    else
-      # Determine the which rail on the "return trip" of the cycle.
-      (num_rails - 2) - (pos_in_cycle - num_rails)
+  def self.fill_rails(array, num_rails)
+    rails = Array.new(num_rails) { Array.new }
+    osc = Oscillator.new(num_rails)
+
+    array.each_with_index do |member, index|
+      rail = osc.next_value
+      rails[rail] << member
+    end
+
+    rails
+  end
+
+  class Oscillator
+    def initialize(size, starting_index = 0)
+      @start = starting_index
+      @end = @start + size - 1
+      @current_value = @start
+
+      @direction = up
+    end
+
+    def next_value
+      return 0 if @start - @end == 0
+
+      if @current_value <= @start
+        @direction = up
+      elsif @current_value >= @end
+        @direction = down
+      end
+
+      result = @current_value
+      @current_value += @direction
+      result
+    end
+
+    private
+
+    def up
+      1
+    end
+
+    def down
+      -1
     end
   end
-
-  # class Oscillator
-  #   def initialize(size, starting_index = 0)
-  #     @start = starting_index
-  #     @end = @start + size
-  #     @current_value = @start
-  #   end
-
-  #   def next_value
-  #     up = 1
-  #     down = -1
-  #     direction = up
-  #     if @current_value <= @start
-  #       direction = up
-  #     elsif @current_value >= @end
-  #       direction = down
-  #     end
-  #     @current_value += direction
-  #   end
-  # end
 end
-
-# 2n - 2
