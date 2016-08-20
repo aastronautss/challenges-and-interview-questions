@@ -1,5 +1,3 @@
-require 'pry'
-
 class RailFenceCipher
   def self.encode(plaintext, num_rails)
     chars = plaintext.chars
@@ -7,15 +5,17 @@ class RailFenceCipher
   end
 
   def self.decode(ciphertext, num_rails)
-    slots = fill_rails(0...ciphertext.length, num_rails)
-    result = Array.new(ciphertext.length)
+    text = ciphertext.clone
+    slots = fill_rails(0...text.length, num_rails)
 
     mapping = slots.map do |rail|
-      chars = ciphertext.slice!((0...rail.length)).split ''
+      chars = text.slice!((0...rail.length)).split ''
       Hash[rail.zip(chars)]
     end.inject(:merge)
 
-    result.each_index.map { |index| mapping[index] }.join
+    mapping.each_with_object([]) do |(index, char), chars|
+      chars[index] = char
+    end.join
   end
 
   private
