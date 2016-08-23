@@ -11,25 +11,20 @@ class WordProblem
   end
 
   def answer
-    initial = @elements[:digits][0]
-    digits = @elements[:digits][1..-1]
-
-    digits.each_with_index.inject(initial) do |result, (num, idx)|
-      result.send @elements[:ops][idx], num
+    @elements[:ops].each_with_index.inject(@elements[:nums]) do |result, (op, idx)|
+      result.send OPERATORS[op], @elements[:nums][idx + 1]
     end
   end
 
   private
 
   def parse(question)
-    digits = question.scan(/-?\d+/).map &:to_i
-    raise ArgumentError if digits.empty?
+    nums = question.scan(/-?\d+/).map &:to_i
+    raise ArgumentError if nums.empty?
 
-    ops = question.scan(/#{OPERATORS.keys.join('|')}/i).map do |str|
-      OPERATORS[str]
-    end
+    ops = question.scan(/#{OPERATORS.keys.join('|')}/i)
     raise ArgumentError if ops.empty?
 
-    { digits: digits, ops: ops }
+    { nums: nums, ops: ops }
   end
 end
