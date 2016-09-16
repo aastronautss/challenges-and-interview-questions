@@ -1,5 +1,3 @@
-require 'pry'
-
 class OCR
   HEIGHT = 4
   WIDTH = 3
@@ -63,23 +61,29 @@ class OCR
   end
 
   def convert
-    parse_digits.map do |group|
-      group.map { |text| DIGITS[text] || '?' }.join ''
+    segments_with_parsed_digits.map do |segment|
+      # After digits are parsed out of the input, we map them onto the
+      # character map that we define.
+      segment.map { |text| DIGITS[text] || '?' }.join ''
     end.join ','
   end
 
   private
 
-  def parse_digits
+  # Each digit in the input is stored as a single string. Returns parsed
+  # digits, divided up into segments.
+  def segments_with_parsed_digits
     segments.map do |segment|
       parse_segment segment
     end
   end
 
+  # Divide each line of input into arrays.
   def segments
     @rows.each_slice(HEIGHT).to_a
   end
 
+  # Individual digits are parsed out of a line of input.
   def parse_segment(segment)
     segment.map do |str|
       str.scan /.{3}/
@@ -101,6 +105,7 @@ class OCR
   end
 
   def valid_row_amount?
+    # Since we `chomp`ed the last row off of our input, we need to compensate.
     (@rows.size + 1) % HEIGHT == 0
   end
 end
