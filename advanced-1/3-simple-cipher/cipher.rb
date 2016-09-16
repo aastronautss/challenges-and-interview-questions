@@ -2,7 +2,7 @@ class Cipher
   attr_reader :key
 
   def initialize(key = generate_key)
-    raise ArgumentError unless key.match /[a-z]+/
+    raise ArgumentError unless key.match /^[a-z]+$/
     @key = key
   end
 
@@ -18,9 +18,13 @@ class Cipher
 
   def shift(text, op)
     text.chars.each_with_index.map do |char, index|
-      distance = @key[index].ord - 97
-      (((char.ord - 97).send(op, distance)) % 26 + 97).chr
+      distance = @key[key_index(index)].ord - 'a'.ord
+      (((char.ord - 'a'.ord).send(op, distance)) % 26 + 'a'.ord).chr
     end.join
+  end
+
+  def key_index(index)
+    index % key.length
   end
 
   def generate_key
