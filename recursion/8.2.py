@@ -27,21 +27,26 @@ def robot_path(end_space, invalid_spaces):
         return path[::-1]
     return false
 
-def find_path(current, end, invalid_spaces, path, bad_points=[]):
+def find_path(current, end, invalid_spaces, path, bad_points=set()):
     if is_invalid_space(current, end, invalid_spaces):
         return False
+
     if current in bad_points:
         return False
+
     if current == end:
         path.append(current)
         return True
+
     right_space = (current[0] + 1, current[1])
     down_space = (current[0], current[1] + 1)
+
     if (find_path(right_space, end, invalid_spaces, path, bad_points) or
         find_path(down_space, end, invalid_spaces, path, bad_points)):
         path.append(current)
         return True
-    bad_points.append(current)
+
+    bad_points.add(current)
     return False
 
 def is_invalid_space(space, end_space, invalid_spaces):
