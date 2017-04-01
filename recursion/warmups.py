@@ -42,7 +42,8 @@ def is_palindrome(seq):
     inner_is_palindrome = is_palindrome(seq[1:-1])
     return inner_is_palindrome and seq[0] == seq[-1]
 
-# Write a recursive function that searches for a target in a sorted array using binary search.
+# Write a recursive function that searches for a target in a sorted array using
+#  binary search.
 
 def binsearch(seq, item):
     if len(seq) == 0:
@@ -56,3 +57,48 @@ def binsearch(seq, item):
         return binsearch(seq[:center], item)
     if item > seq[center]:
         return binsearch(seq[center:], item)
+
+# Write a function that takes in a base and an exponent and recursively
+# computes the exponent of the base (without using **, of course)
+
+def exponent(base, exp):
+    if exp == 0:
+        return 1
+    if exp == 1:
+        return base
+    mem = exponent(base, exp - 1)
+    return base * mem
+
+# Write a function using recursion to print then umbers from n to 0
+
+def countdown(n):
+    if n < 0:
+        return
+    print(n)
+    countdown(n - 1)
+
+# Write a function using recursion to print numbers from 0 to n
+
+def countup(n):
+    if n < 0:
+        return
+    countup(n - 1)
+    print(n)
+
+# Write a function using recursion that takes a string and returns a reversed
+# copy of the string. The only string operation used should be string
+# concatenation
+
+def reverse(string):
+    if len(string) == 1:
+        return string
+    mem = reverse(string[1:])
+    return mem + string[0]
+
+# Recursively produce a sequence of numbers from 3 to 9 with exclusive bounds.
+
+def exclusive_range(min, max):
+    if x + 1 >= y - 1:
+        return [x]
+    mem = range(x + 1, y)
+    return [x + 1].concat(mem)
