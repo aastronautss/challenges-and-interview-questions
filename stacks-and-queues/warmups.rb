@@ -52,3 +52,24 @@ class StackOfQueues
     val
   end
 end
+
+# Write a function that takes a string and returns true if its parens,
+# brackets, and braces are valid.
+
+def valid_parens(str)
+  brackets = []
+  open_brackets = ['(', '[', '{']
+  close_brackets = [')', ']', '}']
+  pairs = Hash[open_brackets.zip close_brackets]
+
+  str.chars.each do |char|
+    if open_brackets.include? char
+      brackets << char
+    elsif close_brackets.include? char
+      open_bracket = brackets.pop
+      return false unless pairs[open_bracket] == char
+    end
+  end
+
+  true
+end
